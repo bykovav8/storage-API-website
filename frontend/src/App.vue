@@ -1,47 +1,79 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+  <h1>CSS 436 - Program 4, Web API storage</h1>
+  <div class="btns">
+    <div>
+      <button class="load-btn">Load Data</button>
     </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+    <div>
+      <button class="clear-btn">Clear Data</button>
+    </div>
+  </div>
+  <div class="input">
+    <p>
+      <label for="first">First Name: </label>
+      <input type="text" name="first" id="first">
+    </p>
+    <p>
+      <label for="last">Last Name: </label>
+      <input type="text" name="last" id="last">
+    </p>
+  </div>
+  <div class="btn">
+      <button class="query-btn">Query</button>
+  </div>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
+h1 {
+  text-align: center;
+  margin-top: 40px;
+  color: rgb(228, 99, 228);
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+button {
+  height: 50px;
+  width: 80px;
+  font-size: 18px;
+  font-weight: bold;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+.btns {
+  margin-top: 60px;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 100px;
 }
+
+
+.input {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  color: rgb(220, 109, 220);
+  font-size: medium;
+}
+
+.btn {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.load-btn {
+  background-color: rgb(251, 251, 102);
+}
+
+.query-btn {
+  background-color: rgb(136, 224, 136);
+}
+
+.clear-btn {
+  background-color: rgb(115, 224, 224);
+}
+
 </style>
