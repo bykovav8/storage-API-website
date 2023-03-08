@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <h1>CSS 436 - Program 4, Web API storage</h1>
+  <h1>Veronika Bykova - Program 4, Web API storage (CSS 436)</h1>
   <div class="btns">
     <div>
       <button class="load-btn">Load Data</button>
