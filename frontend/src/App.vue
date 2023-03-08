@@ -54,7 +54,7 @@ button {
   display: flex;
   justify-content: center;
   gap: 50px;
-  color: rgb(220, 109, 220);
+  color: rgb(232, 121, 232);
   font-size: medium;
 }
 
