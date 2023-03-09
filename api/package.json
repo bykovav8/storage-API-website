@@ -6,6 +6,8 @@
     "start": "func start",
     "test": "echo \"No tests yet...\""
   },
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "@azure/data-tables": "^13.2.1",
+    "@azure/storage-blob": "^12.13.0"
+  }
 }

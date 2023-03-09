@@ -1,12 +1,23 @@
 <script setup>
+ async function load() {
+    const response = await fetch("/api/load", { method: "PUT"});
+    console.log(response.json());
+  }
 
+  function query() {
+
+  }
+
+  function clear() {
+
+  }
 </script>
 
 <template>
   <h1>Veronika Bykova - Program 4, Web API storage (CSS 436)</h1>
   <div class="btns">
     <div>
-      <button class="load-btn">Load Data</button>
+      <button v-on:click="load" class="load-btn">Load Data</button>
     </div>
     <div>
       <button class="clear-btn">Clear Data</button>
