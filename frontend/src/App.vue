@@ -1,17 +1,17 @@
 <script setup>
  async function load() {
     const response = await fetch("/api/load", { method: "PUT"});
-    console.log(response.json());
+    console.log(await response.json());
   }
 
   async function query() {
     const response = await fetch("/api/query"); // { method: "GET"}
-    console.log(response.json());
+    console.log(await response.json());
   }
 
   async function clear() {
     const response = await fetch("/api/clear", { method: "DELETE"});
-    console.log(response.json());
+    console.log(await response.json());
   }
 </script>
 
