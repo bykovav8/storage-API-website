@@ -4,12 +4,14 @@
     console.log(response.json());
   }
 
-  function query() {
-
+  async function query() {
+    const response = await fetch("/api/query"); // { method: "GET"}
+    console.log(response.json());
   }
 
-  function clear() {
-
+  async function clear() {
+    const response = await fetch("/api/clear", { method: "DELETE"});
+    console.log(response.json());
   }
 </script>
 
@@ -20,7 +22,7 @@
       <button v-on:click="load" class="load-btn">Load Data</button>
     </div>
     <div>
-      <button class="clear-btn">Clear Data</button>
+      <button v-on:click="clear" class="clear-btn">Clear Data</button>
     </div>
   </div>
   <div class="input">
@@ -34,7 +36,7 @@
     </p>
   </div>
   <div class="btn">
-      <button class="query-btn">Query</button>
+      <button v-on:click="query" class="query-btn">Query</button>
   </div>
 </template>
 
