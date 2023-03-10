@@ -23,6 +23,9 @@ const lastName = ref();
     else if(lastName.value) {
       queryString = `?lastName=${lastName.value}`;
     }
+    else {
+      console.log("No data was entered");
+    }
 
     try {
       const response = await fetch("/api/query" + queryString); // { method: "GET"}
