@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 
-const queryData = ref({ name: "John"});
+const queryData = ref();
 const firstName = ref();
 const lastName = ref();
 
@@ -23,9 +23,8 @@ const lastName = ref();
     else if(lastName.value) {
       queryString = `?lastName=${lastName.value}`;
     }
-    else {
-      console.log("No data was entered");
-    }
+    // else, if no first and last name is entered
+    // all data from the Azure Table will be displayed
 
     try {
       const response = await fetch("/api/query" + queryString); // { method: "GET"}
