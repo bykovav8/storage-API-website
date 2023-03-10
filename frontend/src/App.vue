@@ -1,12 +1,37 @@
 <script setup>
+import { ref } from "vue";
+
+const queryData = ref({ name: "John"});
+const firstName = ref();
+const lastName = ref();
+
+
  async function load() {
     const response = await fetch("/api/load", { method: "PUT"});
     console.log(await response.json());
   }
 
   async function query() {
-    const response = await fetch("/api/query"); // { method: "GET"}
-    console.log(await response.json());
+    let queryString = "";
+
+    if(firstName.value && lastName.value) {
+      queryString = `?firstName=${firstName.value}&lastName=${lastName.value}`;
+    }
+    else if(firstName.value){
+      queryString = `?firstName=${firstName.value}`;
+    }
+    else if(lastName.value) {
+      queryString = `?lastName=${lastName.value}`;
+    }
+
+    try {
+      const response = await fetch("/api/query" + queryString); // { method: "GET"}
+      //console.log(await response.json());
+      queryData.value = await response.json();
+    }
+    catch (e) {
+      console.log("Error");
+    }
   }
 
   async function clear() {
@@ -28,15 +53,18 @@
   <div class="input">
     <p>
       <label for="first">First Name: </label>
-      <input type="text" name="first" id="first">
+      <input v-model="firstName" type="text" name="first" id="first">
     </p>
     <p>
       <label for="last">Last Name: </label>
-      <input type="text" name="last" id="last">
+      <input v-model="lastName" type="text" name="last" id="last">
     </p>
   </div>
   <div class="btn">
       <button v-on:click="query" class="query-btn">Query</button>
+  </div>
+  <div style="display: flex; justify-content: center; padding-top: 40px;">
+    {{ queryData }}
   </div>
 </template>
 
@@ -61,7 +89,6 @@ button {
   justify-content: center;
   gap: 100px;
 }
-
 
 .input {
   display: flex;

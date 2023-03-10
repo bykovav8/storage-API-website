@@ -1,13 +1,49 @@
+const { odata, TableClient } = require("@azure/data-tables");
+
 module.exports = async function (context, req) {
-    context.log('JavaScript HTTP trigger function processed a request.');
+  const connectionKey = process.env.BlobConnectionKey;
+    try {
 
-    const name = (req.query.name || (req.body && req.body.name));
-    const responseMessage = name
-        ? "Hello, " + name + ". This HTTP triggered function executed successfully."
-        : "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.";
+      const azureTable = TableClient.fromConnectionString(connectionKey, "DimpseyData");
 
-    context.res = {
-        // status: 200, /* Defaults to 200 */
-        body: responseMessage
-    };
+      let queryString = "";
+
+      const { firstName, lastName } = req.query;
+      // VS 
+      // const firstName = req.query.firstName;
+      // const lastName = req.query.lastName;
+
+      if( firstName && lastName) {
+        queryString = odata`PartitionKey eq ${firstName} and RowKey eq ${lastName}`;
+      }
+      else if(firstName) // && !lastName
+      {
+        queryString = odata`PartitionKey eq ${firstName}`;
+      }
+      else if(lastName){ // !firstName
+        queryString = odata`RowKey eq ${lastName}`;
+      }
+
+      let result = azureTable.listEntities({
+        queryOptions: {
+          filter: queryString
+        }
+      });
+
+      let resultData = [];
+      for await (let item of result) {
+        resultData.push(item);
+      }
+
+      context.res.json({
+        status: 200,
+        body: resultData
+      });
+    }
+    catch (e) {
+      context.res.json({
+        status: 500,
+        body: "Failed to execute query: " + e
+      });
+    }
 }
