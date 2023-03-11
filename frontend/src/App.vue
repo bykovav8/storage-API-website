@@ -5,10 +5,18 @@ const queryData = ref();
 const firstName = ref();
 const lastName = ref();
 
+const message = ref();
 
  async function load() {
-    const response = await fetch("/api/load", { method: "PUT"});
-    console.log(await response.json());
+    try {
+      const response = await fetch("/api/load", { method: "PUT"});
+      console.log(await response.json());
+      message.value = "Load is done!"
+    }
+    catch (e) {
+      message.value = "Something went wrong with Load:("
+    }
+    
   }
 
   async function query() {
@@ -29,7 +37,25 @@ const lastName = ref();
     try {
       const response = await fetch("/api/query" + queryString); // { method: "GET"}
       //console.log(await response.json());
-      queryData.value = await response.json();
+      let responseJson = await response.json();
+
+      let responseBody = responseJson.body;
+
+      let modifiedJson = responseBody.map( (value) => {
+        let {etag, timestamp, partitionKey, rowKey, ...modifiedEntry} = value; 
+        modifiedEntry = { name: `${value.partitionKey} ${value.rowKey}`, ...modifiedEntry};
+        return modifiedEntry;
+      })
+
+      queryData.value = modifiedJson;
+
+      if(queryData.value.length == 0){
+        message.value = "Your entered data isn't in the database:("
+      }
+      else {
+        message.value = "Querying is done!"
+      }
+
     }
     catch (e) {
       console.log("Error");
@@ -37,13 +63,23 @@ const lastName = ref();
   }
 
   async function clear() {
-    const response = await fetch("/api/clear", { method: "DELETE"});
-    console.log(await response.json());
-  }
+    try {
+      const response = await fetch("/api/clear", { method: "DELETE"});
+      queryData.value = undefined;
+      console.log(await response.json());
+      message.value = "Data is cleared"
+    }
+    catch (e) {
+      message.value = "Clear didn't work:("
+    }  
+    }
 </script>
 
 <template>
   <h1>Veronika Bykova - Program 4, Web API storage (CSS 436)</h1>
+  <div style="display: flex; justify-content: center; padding-top: 20px; font-size: large;">
+    {{ message }}
+  </div>
   <div class="btns">
     <div>
       <button v-on:click="load" class="load-btn">Load Data</button>
@@ -55,18 +91,28 @@ const lastName = ref();
   <div class="input">
     <p>
       <label for="first">First Name: </label>
-      <input v-model="firstName" type="text" name="first" id="first">
+      <input v-model="firstName" type="text" name="first" id="first" placeholder="Type first name here">
     </p>
     <p>
       <label for="last">Last Name: </label>
-      <input v-model="lastName" type="text" name="last" id="last">
+      <input v-model="lastName" type="text" name="last" id="last" placeholder="Type last name here">
     </p>
   </div>
   <div class="btn">
       <button v-on:click="query" class="query-btn">Query</button>
   </div>
-  <div style="display: flex; justify-content: center; padding-top: 40px;">
-    {{ queryData }}
+  <div style="display: flex; justify-content: center; padding-top: 20px;">
+  <ul id="displayedJSON">
+      <li v-for="item in queryData" class="no-bullets">
+        {{ item.name }}
+        <div v-for="(value, key) in item">
+          <li style="margin-left: 40px"  class="bullets" v-if="key !== 'name'">
+            {{ key }}: {{ value }}
+          </li>
+        </div>
+        <hr>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -85,7 +131,7 @@ button {
 }
 
 .btns {
-  margin-top: 60px;
+  margin-top: 50px;
   margin-bottom: 30px;
   display: flex;
   justify-content: center;
@@ -118,4 +164,11 @@ button {
   background-color: rgb(115, 224, 224);
 }
 
+.no-bullets {
+  list-style-type: none;
+}
+
+.bullets {
+  list-style-type: circle;
+}
 </style>
